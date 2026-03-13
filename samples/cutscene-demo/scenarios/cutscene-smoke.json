@@ -1,0 +1,29 @@
+{
+  "name": "cutscene-smoke",
+  "description": "Load the cutscene fixture, wait for key beats, and capture the final frame.",
+  "steps": [
+    {
+      "type": "hook",
+      "method": "load_fixture",
+      "arguments": [
+        "intro_cutscene"
+      ]
+    },
+    {
+      "type": "wait",
+      "milliseconds": 500
+    },
+    {
+      "type": "capture",
+      "label": "cutscene-start"
+    },
+    {
+      "type": "wait",
+      "milliseconds": 1500
+    },
+    {
+      "type": "capture",
+      "label": "cutscene-finish"
+    }
+  ]
+}

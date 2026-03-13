@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>GodotAgent.Core</RootNamespace>
+    <AssemblyName>GodotAgent.Core</AssemblyName>
+  </PropertyGroup>
+</Project>
+

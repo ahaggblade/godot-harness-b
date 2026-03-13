@@ -1,0 +1,34 @@
+{
+  "name": "ui-menu-focus-flow",
+  "description": "Navigate a menu, validate focus ownership, and capture the highlighted state.",
+  "steps": [
+    {
+      "type": "inspect",
+      "target": "focus"
+    },
+    {
+      "type": "assert",
+      "path": "focused.name",
+      "equals": "StartButton"
+    },
+    {
+      "type": "input",
+      "kind": "action",
+      "action": "ui_down",
+      "pressed": true
+    },
+    {
+      "type": "wait",
+      "milliseconds": 100
+    },
+    {
+      "type": "inspect",
+      "target": "focus"
+    },
+    {
+      "type": "capture",
+      "label": "menu-second-item"
+    }
+  ]
+}
+

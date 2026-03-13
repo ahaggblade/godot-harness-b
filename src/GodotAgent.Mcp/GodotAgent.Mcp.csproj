@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>GodotAgent.Mcp</RootNamespace>
+    <AssemblyName>godot-agent-mcp</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GodotAgent.Core\GodotAgent.Core.csproj" />
+  </ItemGroup>
+</Project>
+

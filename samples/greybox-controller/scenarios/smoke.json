@@ -1,0 +1,44 @@
+{
+  "name": "greybox-smoke",
+  "description": "Reset the world, move right, jump, and capture a frame.",
+  "steps": [
+    {
+      "type": "hook",
+      "method": "reset_world",
+      "arguments": []
+    },
+    {
+      "type": "wait",
+      "milliseconds": 250
+    },
+    {
+      "type": "input",
+      "kind": "action",
+      "action": "move_right",
+      "pressed": true
+    },
+    {
+      "type": "wait",
+      "milliseconds": 300
+    },
+    {
+      "type": "input",
+      "kind": "action",
+      "action": "jump",
+      "pressed": true
+    },
+    {
+      "type": "wait",
+      "milliseconds": 250
+    },
+    {
+      "type": "inspect",
+      "target": "scene"
+    },
+    {
+      "type": "capture",
+      "label": "greybox-jump"
+    }
+  ]
+}
+

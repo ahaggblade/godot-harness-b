@@ -1,0 +1,40 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotAgent.Core", "src/GodotAgent.Core/GodotAgent.Core.csproj", "{15D31A9E-D6AC-4457-B54B-AAB40CB38D5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotAgent.Cli", "src/GodotAgent.Cli/GodotAgent.Cli.csproj", "{0CF5AD99-F50D-4799-B4D9-FD273B84D939}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotAgent.Mcp", "src/GodotAgent.Mcp/GodotAgent.Mcp.csproj", "{E628390C-C9A3-4F26-9BEF-E2AF727DD0E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GodotAgent.Core.Tests", "tests/GodotAgent.Core.Tests/GodotAgent.Core.Tests.csproj", "{A46F1F95-7FC8-4AC6-80BB-3BFA7E7F2853}"
+EndProject
+Global
+  GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Debug|Any CPU = Debug|Any CPU
+    Release|Any CPU = Release|Any CPU
+  EndGlobalSection
+  GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    {15D31A9E-D6AC-4457-B54B-AAB40CB38D5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {15D31A9E-D6AC-4457-B54B-AAB40CB38D5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {15D31A9E-D6AC-4457-B54B-AAB40CB38D5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {15D31A9E-D6AC-4457-B54B-AAB40CB38D5A}.Release|Any CPU.Build.0 = Release|Any CPU
+    {0CF5AD99-F50D-4799-B4D9-FD273B84D939}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {0CF5AD99-F50D-4799-B4D9-FD273B84D939}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {0CF5AD99-F50D-4799-B4D9-FD273B84D939}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {0CF5AD99-F50D-4799-B4D9-FD273B84D939}.Release|Any CPU.Build.0 = Release|Any CPU
+    {E628390C-C9A3-4F26-9BEF-E2AF727DD0E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {E628390C-C9A3-4F26-9BEF-E2AF727DD0E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {E628390C-C9A3-4F26-9BEF-E2AF727DD0E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {E628390C-C9A3-4F26-9BEF-E2AF727DD0E0}.Release|Any CPU.Build.0 = Release|Any CPU
+    {A46F1F95-7FC8-4AC6-80BB-3BFA7E7F2853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {A46F1F95-7FC8-4AC6-80BB-3BFA7E7F2853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {A46F1F95-7FC8-4AC6-80BB-3BFA7E7F2853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {A46F1F95-7FC8-4AC6-80BB-3BFA7E7F2853}.Release|Any CPU.Build.0 = Release|Any CPU
+  EndGlobalSection
+  GlobalSection(SolutionProperties) = preSolution
+    HideSolutionNode = FALSE
+  EndGlobalSection
+EndGlobal
+
