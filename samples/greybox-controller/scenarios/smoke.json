@@ -1,6 +1,6 @@
 {
   "name": "greybox-smoke",
-  "description": "Reset the world, move right, jump, and capture a frame.",
+  "description": "Reset the world, move right, jump, validate semantic state, and capture a frame.",
   "steps": [
     {
       "type": "hook",
@@ -9,7 +9,7 @@
     },
     {
       "type": "wait",
-      "milliseconds": 250
+      "milliseconds": 150
     },
     {
       "type": "input",
@@ -19,7 +19,13 @@
     },
     {
       "type": "wait",
-      "milliseconds": 300
+      "milliseconds": 450
+    },
+    {
+      "type": "input",
+      "kind": "action",
+      "action": "move_right",
+      "pressed": false
     },
     {
       "type": "input",
@@ -29,7 +35,32 @@
     },
     {
       "type": "wait",
-      "milliseconds": 250
+      "milliseconds": 100
+    },
+    {
+      "type": "input",
+      "kind": "action",
+      "action": "jump",
+      "pressed": false
+    },
+    {
+      "type": "wait",
+      "milliseconds": 650
+    },
+    {
+      "type": "hook",
+      "method": "get_semantic_state",
+      "arguments": []
+    },
+    {
+      "type": "assert",
+      "path": "result.movedRightEnough",
+      "equals": true
+    },
+    {
+      "type": "assert",
+      "path": "result.jumped",
+      "equals": true
     },
     {
       "type": "inspect",
@@ -38,7 +69,9 @@
     {
       "type": "capture",
       "label": "greybox-jump"
+    },
+    {
+      "type": "quit"
     }
   ]
 }
-

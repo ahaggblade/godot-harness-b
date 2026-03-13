@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Main.cs" id="1_main"]
+[ext_resource type="Script" path="res://Player.cs" id="2_player"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
+size = Vector2(36, 52)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(1200, 80)
+
+[sub_resource type="Gradient" id="Gradient_background"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.733333, 0.827451, 0.956863, 1, 0.952941, 0.945098, 0.878431, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_background"]
+gradient = SubResource("Gradient_background")
+fill = 1
+width = 640
+height = 360
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="Backdrop" type="Sprite2D" parent="."]
+texture = SubResource("GradientTexture2D_background")
+position = Vector2(320, 180)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(320, 300)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_floor")
+
+[node name="Visual" type="Polygon2D" parent="Ground"]
+color = Color(0.290196, 0.352941, 0.313726, 1)
+polygon = PackedVector2Array(-600, -40, 600, -40, 600, 40, -600, 40)
+
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(120, 220)
+script = ExtResource("2_player")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_player")
+
+[node name="Body" type="Polygon2D" parent="Player"]
+color = Color(0.937255, 0.533333, 0.239216, 1)
+polygon = PackedVector2Array(-18, -26, 18, -26, 18, 26, -18, 26)
+
+[node name="Eyes" type="Polygon2D" parent="Player"]
+color = Color(0.180392, 0.14902, 0.180392, 1)
+polygon = PackedVector2Array(-8, -8, 8, -8, 8, -2, -8, -2)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2(180, -40)
+zoom = Vector2(0.85, 0.85)
+enabled = true
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[connection signal="ready" from="." to="." method="_Ready"]
+
