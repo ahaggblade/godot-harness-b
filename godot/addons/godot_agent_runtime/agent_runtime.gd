@@ -17,8 +17,9 @@ func _ready() -> void:
         push_error("GodotAgentRuntime could not create a runtime bridge.")
         return
 
-    if bridge.has_method("configure"):
-        bridge.call("configure", config.host, config.port, config.token, config.session_id)
+    var configure_method := _resolve_configure_method(bridge)
+    if not configure_method.is_empty():
+        bridge.call(configure_method, config.host, config.port, config.token, config.session_id)
 
     add_child(bridge)
 
@@ -28,16 +29,31 @@ func _instantiate_bridge(script_path: String, node_name: String) -> Node:
 
     var script := load(script_path) as Script
     if script == null:
+        push_warning("GodotAgentRuntime failed to load bridge script: %s" % script_path)
+        return null
+    if not script.can_instantiate():
+        push_warning("GodotAgentRuntime bridge script cannot instantiate yet: %s" % script_path)
         return null
 
-    var node := Node.new()
+    var node = script.new()
+    if not (node is Node):
+        push_warning("GodotAgentRuntime bridge did not instantiate as a Node: %s" % script_path)
+        return null
+
     node.name = node_name
-    node.set_script(script)
-    if not node.has_method("configure"):
+    if _resolve_configure_method(node).is_empty():
+        push_warning("GodotAgentRuntime bridge is missing configure/Configure(): %s" % script_path)
         node.free()
         return null
 
     return node
+
+func _resolve_configure_method(node: Node) -> String:
+    if node.has_method("configure"):
+        return "configure"
+    if node.has_method("Configure"):
+        return "Configure"
+    return ""
 
 func _parse_launch_config() -> Dictionary:
     var config := {
@@ -70,4 +86,3 @@ func _consume_agent_args(config: Dictionary, args: PackedStringArray) -> void:
             config.enabled = true
 
     config.enabled = config.enabled and config.port > 0 and not String(config.token).is_empty()
-

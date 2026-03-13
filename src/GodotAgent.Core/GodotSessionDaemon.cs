@@ -341,6 +341,16 @@ public sealed class GodotSessionDaemon
         await WriteEnvelopeAsync(_runtimeConnection.Writer, envelope);
 
         var response = await pending.Task.WaitAsync(TimeSpan.FromSeconds(15), cancellationToken);
+        if (response.Error is not null)
+        {
+            return new BridgeEnvelope
+            {
+                Type = "response",
+                Id = request.Id,
+                Error = response.Error,
+            };
+        }
+
         if (response.Result is JsonObject resultObject && request.Method == "capture.screenshot")
         {
             var bytesBase64 = resultObject["pngBase64"]?.GetValue<string>();
@@ -348,6 +358,7 @@ public sealed class GodotSessionDaemon
             {
                 var bytes = Convert.FromBase64String(bytesBase64);
                 var artifact = _layout.WriteBytesArtifact("screenshot", "png", bytes);
+                resultObject["artifactKind"] = artifact.Kind;
                 resultObject["artifactPath"] = artifact.Path;
                 resultObject["artifactRelativePath"] = artifact.RelativePath;
                 resultObject.Remove("pngBase64");

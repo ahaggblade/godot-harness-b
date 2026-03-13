@@ -352,6 +352,7 @@ internal static class CliApp
             result = ForceStopStaleSession(layout, manifest);
         }
 
+        var artifacts = ExtractArtifacts(result);
         PrintResult(new CommandResult
         {
             Success = true,
@@ -360,6 +361,7 @@ internal static class CliApp
             Message = "OK",
             SessionId = manifest.SessionId,
             Data = result,
+            Artifacts = artifacts,
         }, json);
         return 0;
     }
@@ -406,6 +408,45 @@ internal static class CliApp
         {
             return false;
         }
+    }
+
+    private static IReadOnlyList<ArtifactRef> ExtractArtifacts(JsonNode result)
+    {
+        if (result is not JsonObject obj)
+        {
+            return Array.Empty<ArtifactRef>();
+        }
+
+        var artifactPath = obj["artifactPath"]?.GetValue<string>();
+        if (string.IsNullOrWhiteSpace(artifactPath) || !File.Exists(artifactPath))
+        {
+            return Array.Empty<ArtifactRef>();
+        }
+
+        var kind = obj["artifactKind"]?.GetValue<string>() ?? InferKindFromPath(artifactPath);
+        var relativePath = obj["artifactRelativePath"]?.GetValue<string>() ?? Path.GetFileName(artifactPath);
+        return new[]
+        {
+            new ArtifactRef
+            {
+                Id = Path.GetFileNameWithoutExtension(artifactPath),
+                Kind = kind,
+                Path = artifactPath,
+                RelativePath = relativePath,
+                CreatedAtUtc = File.GetCreationTimeUtc(artifactPath),
+            },
+        };
+    }
+
+    private static string InferKindFromPath(string artifactPath)
+    {
+        var fileName = Path.GetFileName(artifactPath);
+        if (fileName.StartsWith("screenshot-", StringComparison.OrdinalIgnoreCase))
+        {
+            return "screenshot";
+        }
+
+        return "artifact";
     }
 
     private static int PrintLogs(SessionManifest? manifest, bool json)
