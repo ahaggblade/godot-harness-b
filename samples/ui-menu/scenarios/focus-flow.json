@@ -82,7 +82,7 @@
       "kind": "mouse",
       "motion": true,
       "x": 480,
-      "y": 378
+      "y": 349
     },
     {
       "type": "wait",
@@ -105,7 +105,7 @@
       "type": "input",
       "kind": "mouse",
       "x": 480,
-      "y": 378,
+      "y": 349,
       "buttonIndex": 1,
       "pressed": true
     },
@@ -117,7 +117,7 @@
       "type": "input",
       "kind": "mouse",
       "x": 480,
-      "y": 378,
+      "y": 349,
       "buttonIndex": 1,
       "pressed": false
     },

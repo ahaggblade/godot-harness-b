@@ -32,66 +32,90 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0235294, 0.054902, 0.109804, 1)
 
-[node name="Panel" type="Panel" parent="."]
-offset_left = 250.0
-offset_top = 60.0
-offset_right = 710.0
-offset_bottom = 480.0
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Center"]
+custom_minimum_size = Vector2(460, 420)
+layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="TitleLabel" type="Label" parent="."]
-offset_left = 322.0
-offset_top = 98.0
-offset_right = 640.0
-offset_bottom = 140.0
-theme_override_font_sizes/font_size = 34
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 34
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 34
+theme_override_constants/margin_bottom = 28
+
+[node name="Layout" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 30
 text = "Agent Validation Menu"
 horizontal_alignment = 1
 
-[node name="SubtitleLabel" type="Label" parent="."]
-offset_left = 300.0
-offset_top = 144.0
-offset_right = 660.0
-offset_bottom = 180.0
+[node name="SubtitleLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "Keyboard focus and mouse hover should be obvious."
 horizontal_alignment = 1
 
-[node name="StartButton" type="Button" parent="."]
-offset_left = 340.0
-offset_top = 198.0
-offset_right = 620.0
-offset_bottom = 254.0
+[node name="SpacerTop" type="Control" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 6)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Start"
 
-[node name="OptionsButton" type="Button" parent="."]
-offset_left = 340.0
-offset_top = 274.0
-offset_right = 620.0
-offset_bottom = 330.0
+[node name="OptionsButton" type="Button" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Options"
 
-[node name="QuitButton" type="Button" parent="."]
-offset_left = 340.0
-offset_top = 350.0
-offset_right = 620.0
-offset_bottom = 406.0
+[node name="QuitButton" type="Button" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Quit"
 
-[node name="InfoLabel" type="Label" parent="."]
-offset_left = 300.0
-offset_top = 430.0
-offset_right = 660.0
-offset_bottom = 456.0
+[node name="FooterSpacer" type="Control" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 18)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
 text = "Focus: None   Hover: None"
 horizontal_alignment = 1
 
-[node name="StatusLabel" type="Label" parent="."]
-offset_left = 300.0
-offset_top = 458.0
-offset_right = 660.0
-offset_bottom = 484.0
+[node name="StatusLabel" type="Label" parent="Center/Panel/Margin/Layout"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18
 text = "Waiting for input"
 horizontal_alignment = 1

@@ -22,11 +22,11 @@ public partial class Main : Control
 
     public override void _Ready()
     {
-        StartButton ??= GetNodeOrNull<Button>("StartButton");
-        OptionsButton ??= GetNodeOrNull<Button>("OptionsButton");
-        QuitButton ??= GetNodeOrNull<Button>("QuitButton");
-        InfoLabel ??= GetNodeOrNull<Label>("InfoLabel");
-        StatusLabel ??= GetNodeOrNull<Label>("StatusLabel");
+        StartButton ??= GetNodeOrNull<Button>("Center/Panel/Margin/Layout/StartButton");
+        OptionsButton ??= GetNodeOrNull<Button>("Center/Panel/Margin/Layout/OptionsButton");
+        QuitButton ??= GetNodeOrNull<Button>("Center/Panel/Margin/Layout/QuitButton");
+        InfoLabel ??= GetNodeOrNull<Label>("Center/Panel/Margin/Layout/InfoLabel");
+        StatusLabel ??= GetNodeOrNull<Label>("Center/Panel/Margin/Layout/StatusLabel");
 
         var buttons = new List<Button>();
         if (StartButton is not null)
@@ -50,6 +50,7 @@ public partial class Main : Control
         EnsureInputAction("ui_down", Key.Down, Key.S);
         EnsureInputAction("ui_accept", Key.Enter, Key.Space);
 
+        ConfigurePassiveControls();
         ConfigureButton(StartButton, "Start selected");
         ConfigureButton(OptionsButton, "Options selected");
         ConfigureButton(QuitButton, "Quit selected");
@@ -90,6 +91,7 @@ public partial class Main : Control
             ["lastActivated"] = _lastActivated,
             ["statusText"] = StatusLabel?.Text ?? string.Empty,
             ["infoText"] = InfoLabel?.Text ?? string.Empty,
+            ["buttonCenters"] = BuildButtonCenters(),
         };
     }
 
@@ -103,6 +105,31 @@ public partial class Main : Control
         button.FocusMode = FocusModeEnum.All;
         button.MouseDefaultCursorShape = CursorShape.PointingHand;
         button.Pressed += () => ActivateButton(button.Name.ToString(), statusText);
+    }
+
+    private void ConfigurePassiveControls()
+    {
+        var nodePaths = new[]
+        {
+            "Center",
+            "Center/Panel",
+            "Center/Panel/Margin",
+            "Center/Panel/Margin/Layout",
+            "Center/Panel/Margin/Layout/TitleLabel",
+            "Center/Panel/Margin/Layout/SubtitleLabel",
+            "Center/Panel/Margin/Layout/SpacerTop",
+            "Center/Panel/Margin/Layout/FooterSpacer",
+            "Center/Panel/Margin/Layout/InfoLabel",
+            "Center/Panel/Margin/Layout/StatusLabel",
+        };
+
+        foreach (var nodePath in nodePaths)
+        {
+            if (GetNodeOrNull<Control>(nodePath) is { } control)
+            {
+                control.MouseFilter = MouseFilterEnum.Ignore;
+            }
+        }
     }
 
     private void ConfigureFocusLoop()
@@ -161,6 +188,33 @@ public partial class Main : Control
         {
             InfoLabel.Text = $"Focus: {NodeName(focused)}   Hover: {NodeName(hovered)}";
         }
+    }
+
+    private Godot.Collections.Dictionary<string, Variant> BuildButtonCenters()
+    {
+        var centers = new Godot.Collections.Dictionary<string, Variant>();
+        AddButtonCenter(centers, "start", StartButton);
+        AddButtonCenter(centers, "options", OptionsButton);
+        AddButtonCenter(centers, "quit", QuitButton);
+        return centers;
+    }
+
+    private static void AddButtonCenter(
+        Godot.Collections.Dictionary<string, Variant> centers,
+        string key,
+        Control? control)
+    {
+        if (control is null)
+        {
+            return;
+        }
+
+        var rect = control.GetGlobalRect();
+        centers[key] = new Godot.Collections.Dictionary<string, Variant>
+        {
+            ["x"] = rect.GetCenter().X,
+            ["y"] = rect.GetCenter().Y,
+        };
     }
 
     private static void ApplyButtonTheme(Button button, Color background, Color border, Color text)
