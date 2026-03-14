@@ -9,6 +9,21 @@ return exitCode;
 
 internal static class CliApp
 {
+    private static readonly HashSet<string> RuntimeDependentMethods = new(StringComparer.Ordinal)
+    {
+        "capture.screenshot",
+        "inspect.scene",
+        "inspect.node",
+        "inspect.focus",
+        "inspect.hover",
+        "inspect.monitors",
+        "input.action",
+        "input.key",
+        "input.mouse",
+        "hook.invoke",
+        "runtime.quit",
+    };
+
     public static async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
         if (args.Length == 0 || IsHelp(args[0]))
@@ -288,6 +303,11 @@ internal static class CliApp
         var layout = new WorkspaceLayout(options.GetValueOrDefault("project") ?? Environment.CurrentDirectory);
         var manifest = layout.LoadManifest(options.GetValueOrDefault("session-id"))
             ?? throw new InvalidOperationException("No active session was found.");
+        manifest = await WaitForRuntimeConnectionAsync(layout, manifest, cancellationToken);
+        if (!manifest.RuntimeConnected)
+        {
+            throw new InvalidOperationException("Timed out waiting for a live Godot runtime to connect.");
+        }
 
         var runner = new ScenarioRunner();
         var (report, artifact) = await runner.RunAsync(manifest, scenarioPath, cancellationToken);
@@ -335,6 +355,14 @@ internal static class CliApp
     {
         var layout = new WorkspaceLayout(projectPath);
         var manifest = layout.LoadManifest(sessionId) ?? throw new InvalidOperationException("No active session was found.");
+        if (RuntimeDependentMethods.Contains(method))
+        {
+            manifest = await WaitForRuntimeConnectionAsync(layout, manifest, cancellationToken);
+            if (!manifest.RuntimeConnected)
+            {
+                throw new InvalidOperationException("Timed out waiting for a live Godot runtime to connect.");
+            }
+        }
 
         if (method == "session.status")
         {
@@ -364,6 +392,35 @@ internal static class CliApp
             Artifacts = artifacts,
         }, json);
         return 0;
+    }
+
+    private static async Task<SessionManifest> WaitForRuntimeConnectionAsync(
+        WorkspaceLayout layout,
+        SessionManifest manifest,
+        CancellationToken cancellationToken)
+    {
+        if (manifest.RuntimeConnected)
+        {
+            return manifest;
+        }
+
+        for (var attempt = 0; attempt < 40; attempt++)
+        {
+            await Task.Delay(250, cancellationToken);
+            var refreshed = layout.LoadManifest(manifest.SessionId);
+            if (refreshed is null)
+            {
+                break;
+            }
+
+            manifest = refreshed;
+            if (manifest.RuntimeConnected || string.Equals(manifest.State, "stopped", StringComparison.Ordinal))
+            {
+                break;
+            }
+        }
+
+        return manifest;
     }
 
     private static JsonNode ForceStopStaleSession(WorkspaceLayout layout, SessionManifest manifest)

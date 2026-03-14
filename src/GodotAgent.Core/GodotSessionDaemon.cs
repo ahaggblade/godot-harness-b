@@ -243,11 +243,18 @@ public sealed class GodotSessionDaemon
             _runtimeConnection = runtime;
             _manifest.RuntimeConnected = true;
             _layout.SaveManifest(_manifest);
-            await AppendEventAsync(runtimeEventsPath, "runtime.connected", new JsonObject());
-            await RuntimeReadLoopAsync(runtime, runtimeEventsPath, cancellationToken);
-            _manifest.RuntimeConnected = false;
-            _runtimeConnection = null;
-            _layout.SaveManifest(_manifest);
+            try
+            {
+                await AppendEventAsync(runtimeEventsPath, "runtime.connected", new JsonObject());
+                await RuntimeReadLoopAsync(runtime, runtimeEventsPath, cancellationToken);
+            }
+            finally
+            {
+                _manifest.RuntimeConnected = false;
+                _runtimeConnection = null;
+                _layout.SaveManifest(_manifest);
+            }
+
             return;
         }
 
@@ -272,9 +279,30 @@ public sealed class GodotSessionDaemon
                 if (envelope.Type == "event")
                 {
                     var payload = envelope.Result as JsonObject ?? new JsonObject();
+                    if (string.Equals(envelope.Method, "runtime.ready", StringComparison.Ordinal))
+                    {
+                        _manifest.RuntimeVersion = payload["engineVersion"]?.ToString();
+                        _manifest.Metadata["runtime"] = payload["runtime"]?.DeepClone();
+                        _manifest.Metadata["degraded"] = payload["degraded"]?.DeepClone() ?? false;
+                        _manifest.Metadata["managedBridgeAvailable"] = payload["managedBridgeAvailable"]?.DeepClone();
+                        _manifest.Metadata["managedBridgeError"] = payload["managedBridgeError"]?.DeepClone();
+                        if (payload["managedBridgeError"] is not null)
+                        {
+                            _manifest.LastError = payload["managedBridgeError"]?.GetValue<string>();
+                        }
+
+                        _layout.SaveManifest(_manifest);
+                    }
+
                     if (string.Equals(envelope.Method, "scene.changed", StringComparison.Ordinal))
                     {
                         _manifest.CurrentScene = payload["currentScene"]?.GetValue<string>();
+                        _layout.SaveManifest(_manifest);
+                    }
+
+                    if (string.Equals(envelope.Method, "runtime.error", StringComparison.Ordinal))
+                    {
+                        _manifest.LastError = payload["message"]?.GetValue<string>();
                         _layout.SaveManifest(_manifest);
                     }
 
@@ -284,6 +312,17 @@ public sealed class GodotSessionDaemon
         }
         catch (Exception ex) when (ex is IOException or OperationCanceledException)
         {
+            await AppendEventAsync(runtimeEventsPath, "runtime.disconnected", new JsonObject { ["message"] = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _manifest.LastError = ex.Message;
+            _layout.SaveManifest(_manifest);
+            await AppendEventAsync(runtimeEventsPath, "runtime.error", new JsonObject
+            {
+                ["code"] = "runtime_read_failed",
+                ["message"] = ex.Message,
+            });
             await AppendEventAsync(runtimeEventsPath, "runtime.disconnected", new JsonObject { ["message"] = ex.Message });
         }
     }
@@ -422,8 +461,11 @@ public sealed class GodotSessionDaemon
             ["godotPid"] = _manifest.GodotPid,
             ["daemonPid"] = _manifest.DaemonPid,
             ["runtimeConnected"] = _manifest.RuntimeConnected,
+            ["runtimeVersion"] = _manifest.RuntimeVersion,
             ["currentScene"] = _manifest.CurrentScene,
             ["port"] = _manifest.Port,
+            ["lastError"] = _manifest.LastError,
+            ["metadata"] = _manifest.Metadata.DeepClone(),
         };
 
     private JsonObject BuildLogSummaryNode()
@@ -466,6 +508,8 @@ public sealed class GodotSessionDaemon
         return new JsonObject
         {
             ["sessionId"] = _manifest.SessionId,
+            ["lastError"] = _manifest.LastError,
+            ["metadata"] = _manifest.Metadata.DeepClone(),
             ["errors"] = errors,
         };
     }

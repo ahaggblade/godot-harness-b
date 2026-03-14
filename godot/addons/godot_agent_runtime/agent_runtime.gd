@@ -9,12 +9,18 @@ func _ready() -> void:
         push_warning("GodotAgentRuntime did not find agent launch arguments.")
         return
 
-    var bridge := _instantiate_bridge(MANAGED_BRIDGE_PATH, "ManagedBridge")
+    var managed_attempt := _instantiate_bridge(MANAGED_BRIDGE_PATH, "ManagedBridge")
+    var bridge: Node = managed_attempt.node
     if bridge == null:
-        bridge = _instantiate_bridge(FALLBACK_BRIDGE_PATH, "FallbackBridge")
+        var fallback_attempt := _instantiate_bridge(FALLBACK_BRIDGE_PATH, "DiagnosticBridge")
+        bridge = fallback_attempt.node
+        if bridge != null:
+            var diagnostic_method := _resolve_diagnostic_method(bridge)
+            if not diagnostic_method.is_empty():
+                bridge.call(diagnostic_method, String(managed_attempt.error))
 
     if bridge == null:
-        push_error("GodotAgentRuntime could not create a runtime bridge.")
+        push_error("GodotAgentRuntime could not create a runtime bridge. Managed error: %s" % managed_attempt.error)
         return
 
     var configure_method := _resolve_configure_method(bridge)
@@ -23,36 +29,61 @@ func _ready() -> void:
 
     add_child(bridge)
 
-func _instantiate_bridge(script_path: String, node_name: String) -> Node:
+func _instantiate_bridge(script_path: String, node_name: String) -> Dictionary:
     if not ResourceLoader.exists(script_path):
-        return null
+        return {
+            "node": null,
+            "error": "Bridge script does not exist: %s" % script_path
+        }
 
     var script := load(script_path) as Script
     if script == null:
         push_warning("GodotAgentRuntime failed to load bridge script: %s" % script_path)
-        return null
+        return {
+            "node": null,
+            "error": "Failed to load bridge script: %s" % script_path
+        }
     if not script.can_instantiate():
         push_warning("GodotAgentRuntime bridge script cannot instantiate yet: %s" % script_path)
-        return null
+        return {
+            "node": null,
+            "error": "Bridge script cannot instantiate yet: %s" % script_path
+        }
 
     var node = script.new()
     if not (node is Node):
         push_warning("GodotAgentRuntime bridge did not instantiate as a Node: %s" % script_path)
-        return null
+        return {
+            "node": null,
+            "error": "Bridge did not instantiate as a Node: %s" % script_path
+        }
 
     node.name = node_name
     if _resolve_configure_method(node).is_empty():
         push_warning("GodotAgentRuntime bridge is missing configure/Configure(): %s" % script_path)
         node.free()
-        return null
+        return {
+            "node": null,
+            "error": "Bridge is missing configure/Configure(): %s" % script_path
+        }
 
-    return node
+    return {
+        "node": node,
+        "error": ""
+    }
 
 func _resolve_configure_method(node: Node) -> String:
     if node.has_method("configure"):
         return "configure"
     if node.has_method("Configure"):
         return "Configure"
+    return ""
+
+func _resolve_diagnostic_method(node: Node) -> String:
+    if node.has_method("set_diagnostic_state"):
+        return "set_diagnostic_state"
+    if node.has_method("SetDiagnosticState"):
+        return "SetDiagnosticState"
     return ""
 
 func _parse_launch_config() -> Dictionary:

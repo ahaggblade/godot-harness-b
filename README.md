@@ -7,7 +7,7 @@
 - `src/GodotAgent.Core`: session lifecycle, artifact storage, bridge protocol, scenario validation, and gdUnit wrapping.
 - `src/GodotAgent.Cli`: user-facing CLI and background daemon entrypoint.
 - `src/GodotAgent.Mcp`: optional MCP adapter that exposes a thin tool layer over the same core contract.
-- `godot/addons/godot_agent_runtime`: the Godot-side hybrid bridge, with a tiny GDScript bootstrap and a primary C# runtime bridge.
+- `godot/addons/godot_agent_runtime`: the Godot-side bridge, with a tiny GDScript bootstrap, a primary C# runtime bridge, and a diagnostic-only GDScript fallback.
 - `samples`: benchmark scenario definitions for acceptance testing.
 - `docs`: architecture notes and benchmark success criteria.
 
@@ -30,8 +30,8 @@ Every command supports `--json` and returns compact structured output with artif
 
 1. `session run` starts a background daemon for the target project.
 2. The daemon launches Godot and passes loopback bridge details through command-line user arguments.
-3. The project-side addon bootstrap prefers a C# runtime bridge, falling back to GDScript only when the managed bridge is unavailable.
-4. The active runtime bridge connects back to the daemon and exposes runtime inspection, capture, and input hooks.
+3. The project-side addon bootstrap prefers a C# runtime bridge, falling back to a diagnostic GDScript bridge only when the managed bridge is unavailable.
+4. The active runtime bridge connects back to the daemon and either exposes the full runtime surface or reports a degraded diagnostic state with the managed bridge failure reason.
 5. Subsequent CLI commands talk to the daemon, which either serves filesystem-backed state or forwards bridge RPC requests to the running game.
 
 ## Deterministic validation
@@ -40,4 +40,4 @@ Every command supports `--json` and returns compact structured output with artif
 
 ## Local verification note
 
-This workspace does not currently have `dotnet` or `godot` installed, so the code has been implemented as a source-first scaffold and could not be compiled or run in-place yet.
+This repo has been verified locally with the system `dotnet` and `godot` installations on macOS, including managed-bridge smoke runs and benchmark validation for the greybox controller and UI menu samples.

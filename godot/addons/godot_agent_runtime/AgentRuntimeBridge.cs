@@ -292,6 +292,13 @@ public partial class AgentRuntimeBridge : Node
             Input.ActionRelease(action);
         }
 
+        var inputEvent = new InputEventAction
+        {
+            Action = action,
+            Pressed = pressed,
+        };
+        Input.ParseInputEvent(inputEvent);
+
         return new StringObjectMap
         {
             ["ok"] = true,
@@ -313,6 +320,30 @@ public partial class AgentRuntimeBridge : Node
 
     private static StringObjectMap InputMouse(JsonElement parameters)
     {
+        if (GetBool(parameters, "motion", false))
+        {
+            var motionEvent = new InputEventMouseMotion();
+
+            if (TryGetDouble(parameters, "x", out var motionX) && TryGetDouble(parameters, "y", out var motionY))
+            {
+                var position = new Vector2((float)motionX, (float)motionY);
+                motionEvent.Position = position;
+                motionEvent.GlobalPosition = position;
+            }
+
+            if (TryGetDouble(parameters, "relativeX", out var relativeX) && TryGetDouble(parameters, "relativeY", out var relativeY))
+            {
+                motionEvent.Relative = new Vector2((float)relativeX, (float)relativeY);
+            }
+
+            Input.ParseInputEvent(motionEvent);
+            return new StringObjectMap
+            {
+                ["ok"] = true,
+                ["motion"] = true,
+            };
+        }
+
         var inputEvent = new InputEventMouseButton
         {
             ButtonIndex = (MouseButton)GetInt(parameters, "buttonIndex", (int)MouseButton.Left),
@@ -327,7 +358,11 @@ public partial class AgentRuntimeBridge : Node
         }
 
         Input.ParseInputEvent(inputEvent);
-        return new StringObjectMap { ["ok"] = true };
+        return new StringObjectMap
+        {
+            ["ok"] = true,
+            ["motion"] = false,
+        };
     }
 
     private StringObjectMap InvokeHook(JsonElement parameters)

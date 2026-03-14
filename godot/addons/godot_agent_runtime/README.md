@@ -6,9 +6,9 @@ This addon is the Godot-side runtime bridge for the `godot-agent` CLI.
 
 - `agent_runtime.gd`: tiny bootstrap autoload that parses launch args and chooses the runtime implementation
 - `AgentRuntimeBridge.cs`: primary managed runtime bridge for C#-capable projects
-- `agent_runtime_fallback.gd`: fallback runtime implementation when the C# bridge cannot load
+- `agent_runtime_fallback.gd`: diagnostic-only fallback that reports why the managed bridge could not load
 
-This keeps the real bridge logic mostly in C# while preserving a resilient bootstrap path.
+This keeps the real bridge logic in C# while preserving a small bootstrap and a clear failure-reporting path.
 
 ## Install into a project
 
