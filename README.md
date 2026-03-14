@@ -30,7 +30,7 @@ Every command supports `--json` and returns compact structured output with artif
 
 1. `session run` starts a background daemon for the target project.
 2. The daemon launches Godot and passes loopback bridge details through command-line user arguments.
-3. The project-side addon bootstrap prefers a C# runtime bridge, falling back to a diagnostic GDScript bridge only when the managed bridge is unavailable.
+3. The project-side addon bootstrap stays inert unless the harness passes an explicit activation trigger, then it prefers a C# runtime bridge and falls back to a diagnostic GDScript bridge only when the managed bridge is unavailable.
 4. The active runtime bridge connects back to the daemon and either exposes the full runtime surface or reports a degraded diagnostic state with the managed bridge failure reason.
 5. Subsequent CLI commands talk to the daemon, which either serves filesystem-backed state or forwards bridge RPC requests to the running game.
 

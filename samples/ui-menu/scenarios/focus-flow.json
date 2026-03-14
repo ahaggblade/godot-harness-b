@@ -2,140 +2,140 @@
   "name": "ui-menu-focus-flow",
   "description": "Navigate a menu, validate focus and hover ownership, activate buttons, and capture the highlighted state.",
   "steps": [
-    {
-      "type": "hook",
-      "method": "reset_menu"
-    },
-    {
-      "type": "wait",
-      "milliseconds": 150
-    },
-    {
-      "type": "inspect",
-      "target": "focus"
-    },
-    {
-      "type": "assert",
-      "path": "focused.name",
-      "equals": "StartButton"
-    },
-    {
-      "type": "input",
-      "kind": "action",
-      "action": "ui_down",
-      "pressed": true
-    },
-    {
-      "type": "wait",
-      "milliseconds": 75
-    },
-    {
-      "type": "input",
-      "kind": "action",
-      "action": "ui_down",
-      "pressed": false
-    },
-    {
-      "type": "wait",
-      "milliseconds": 150
-    },
-    {
-      "type": "inspect",
-      "target": "focus"
-    },
-    {
-      "type": "assert",
-      "path": "focused.name",
-      "equals": "OptionsButton"
-    },
-    {
-      "type": "input",
-      "kind": "action",
-      "action": "ui_accept",
-      "pressed": true
-    },
-    {
-      "type": "wait",
-      "milliseconds": 75
-    },
-    {
-      "type": "input",
-      "kind": "action",
-      "action": "ui_accept",
-      "pressed": false
-    },
-    {
-      "type": "wait",
-      "milliseconds": 150
-    },
-    {
-      "type": "hook",
-      "method": "get_menu_state"
-    },
-    {
-      "type": "assert",
-      "path": "result.lastActivated",
-      "equals": "options"
-    },
-    {
-      "type": "input",
-      "kind": "mouse",
-      "motion": true,
-      "x": 480,
-      "y": 349
-    },
-    {
-      "type": "wait",
-      "milliseconds": 150
-    },
-    {
-      "type": "inspect",
-      "target": "hover"
-    },
-    {
-      "type": "assert",
-      "path": "hovered.name",
-      "equals": "QuitButton"
-    },
-    {
-      "type": "capture",
-      "label": "menu-quit-hover"
-    },
-    {
-      "type": "input",
-      "kind": "mouse",
-      "x": 480,
-      "y": 349,
-      "buttonIndex": 1,
-      "pressed": true
-    },
-    {
-      "type": "wait",
-      "milliseconds": 75
-    },
-    {
-      "type": "input",
-      "kind": "mouse",
-      "x": 480,
-      "y": 349,
-      "buttonIndex": 1,
-      "pressed": false
-    },
-    {
-      "type": "wait",
-      "milliseconds": 150
-    },
-    {
-      "type": "hook",
-      "method": "get_menu_state"
-    },
-    {
-      "type": "assert",
-      "path": "result.lastActivated",
-      "equals": "quit"
-    },
-    {
-      "type": "quit"
-    }
+	{
+	  "type": "hook",
+	  "method": "reset_menu"
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 150
+	},
+	{
+	  "type": "inspect",
+	  "target": "focus"
+	},
+	{
+	  "type": "assert",
+	  "path": "focused.name",
+	  "equals": "StartButton"
+	},
+	{
+	  "type": "input",
+	  "kind": "action",
+	  "action": "ui_down",
+	  "pressed": true
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 75
+	},
+	{
+	  "type": "input",
+	  "kind": "action",
+	  "action": "ui_down",
+	  "pressed": false
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 150
+	},
+	{
+	  "type": "inspect",
+	  "target": "focus"
+	},
+	{
+	  "type": "assert",
+	  "path": "focused.name",
+	  "equals": "OptionsButton"
+	},
+	{
+	  "type": "input",
+	  "kind": "action",
+	  "action": "ui_accept",
+	  "pressed": true
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 75
+	},
+	{
+	  "type": "input",
+	  "kind": "action",
+	  "action": "ui_accept",
+	  "pressed": false
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 150
+	},
+	{
+	  "type": "hook",
+	  "method": "get_menu_state"
+	},
+	{
+	  "type": "assert",
+	  "path": "result.lastActivated",
+	  "equals": "options"
+	},
+	{
+	  "type": "input",
+	  "kind": "mouse",
+	  "motion": true,
+	  "x": 480,
+	  "y": 349
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 150
+	},
+	{
+	  "type": "inspect",
+	  "target": "hover"
+	},
+	{
+	  "type": "assert",
+	  "path": "hovered.name",
+	  "equals": "QuitButton"
+	},
+	{
+	  "type": "capture",
+	  "label": "menu-quit-hover"
+	},
+	{
+	  "type": "input",
+	  "kind": "mouse",
+	  "x": 480,
+	  "y": 349,
+	  "buttonIndex": 1,
+	  "pressed": true
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 75
+	},
+	{
+	  "type": "input",
+	  "kind": "mouse",
+	  "x": 480,
+	  "y": 349,
+	  "buttonIndex": 1,
+	  "pressed": false
+	},
+	{
+	  "type": "wait",
+	  "milliseconds": 150
+	},
+	{
+	  "type": "hook",
+	  "method": "get_menu_state"
+	},
+	{
+	  "type": "assert",
+	  "path": "result.lastActivated",
+	  "equals": "quit"
+	},
+	{
+	  "type": "quit"
+	}
   ]
 }

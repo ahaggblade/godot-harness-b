@@ -20,9 +20,10 @@
 1. `session run` creates a session id, token, and manifest.
 2. The CLI respawns itself in hidden daemon mode.
 3. The daemon opens a loopback TCP listener and launches Godot with agent user args.
-4. The GDScript bootstrap instantiates the managed C# bridge when possible, otherwise it falls back to a local diagnostic bridge that reports why the managed path failed.
-5. The active runtime bridge connects back with the session id and token.
-6. Runtime commands are forwarded over the bridge, while status and artifact metadata remain filesystem-backed.
+4. The GDScript bootstrap first checks for an explicit activation trigger. Without one, it returns immediately and does not load a runtime bridge.
+5. When activated, the bootstrap instantiates the managed C# bridge when possible, otherwise it falls back to a local diagnostic bridge that reports why the managed path failed.
+6. The active runtime bridge connects back with the session id and token.
+7. Runtime commands are forwarded over the bridge, while status and artifact metadata remain filesystem-backed.
 
 ## Failure model
 

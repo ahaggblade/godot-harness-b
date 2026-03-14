@@ -41,7 +41,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="Center"]
-custom_minimum_size = Vector2(460, 420)
+custom_minimum_size = Vector2(500, 468)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
@@ -52,17 +52,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 34
-theme_override_constants/margin_top = 30
-theme_override_constants/margin_right = 34
-theme_override_constants/margin_bottom = 28
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
 
 [node name="Layout" type="VBoxContainer" parent="Center/Panel/Margin"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 14
 
 [node name="TitleLabel" type="Label" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 44)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 30
@@ -70,7 +70,7 @@ text = "Agent Validation Menu"
 horizontal_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -78,7 +78,7 @@ text = "Keyboard focus and mouse hover should be obvious."
 horizontal_alignment = 1
 
 [node name="SpacerTop" type="Control" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 6)
+custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 
 [node name="StartButton" type="Button" parent="Center/Panel/Margin/Layout"]
@@ -100,12 +100,12 @@ size_flags_horizontal = 3
 text = "Quit"
 
 [node name="FooterSpacer" type="Control" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="InfoLabel" type="Label" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 24)
+custom_minimum_size = Vector2(0, 28)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 16
@@ -113,7 +113,7 @@ text = "Focus: None   Hover: None"
 horizontal_alignment = 1
 
 [node name="StatusLabel" type="Label" parent="Center/Panel/Margin/Layout"]
-custom_minimum_size = Vector2(0, 28)
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 18

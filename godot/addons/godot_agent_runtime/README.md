@@ -4,7 +4,7 @@ This addon is the Godot-side runtime bridge for the `godot-agent` CLI.
 
 ## Hybrid structure
 
-- `agent_runtime.gd`: tiny bootstrap autoload that parses launch args and chooses the runtime implementation
+- `agent_runtime.gd`: tiny bootstrap autoload that stays inert unless an explicit activation trigger is present, then chooses the runtime implementation
 - `AgentRuntimeBridge.cs`: primary managed runtime bridge for C#-capable projects
 - `agent_runtime_fallback.gd`: diagnostic-only fallback that reports why the managed bridge could not load
 
@@ -26,6 +26,16 @@ The CLI daemon passes the following user args when it launches Godot:
 - `--agent-port=<port>`
 - `--agent-token=<token>`
 - `--agent-session-id=<id>`
+
+When those arguments are absent, the bootstrap autoload returns immediately and does not load or instantiate either bridge implementation. This keeps ordinary editor sessions quiet and avoids loading runtime tooling unless the harness explicitly asks for it.
+
+An optional environment-based trigger is also supported for debugging:
+
+- `GODOT_AGENT_ENABLE=1`
+- `GODOT_AGENT_HOST=127.0.0.1`
+- `GODOT_AGENT_PORT=<port>`
+- `GODOT_AGENT_TOKEN=<token>`
+- `GODOT_AGENT_SESSION_ID=<id>`
 
 ## RPC surface
 
